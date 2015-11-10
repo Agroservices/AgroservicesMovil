@@ -5,16 +5,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <TextView android:text="Despachos" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listView1"
+        android:id="@+id/listViewRuta"
         android:layout_below="@+id/button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -23,11 +17,21 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cargar Despachos"
+        android:text="Buscar Rutas"
         android:id="@+id/button"
-        android:layout_below="@+id/textView"
+        android:onClick="cargarRutas"
+        android:layout_below="@+id/id_transportista"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/id_transportista"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:onClick="loadDespachos" />
+        android:text="Id Transportista" />
 
 
 </RelativeLayout>

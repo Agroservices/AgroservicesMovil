@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * Created by User on 10/11/2015.
  */
 public class RutaAdapter extends ArrayAdapter {
+
     Context context;
     int layoutResourceId;
     ArrayList<Ruta> rutas = null;
@@ -37,8 +38,8 @@ public class RutaAdapter extends ArrayAdapter {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new RutaHolder();
-            holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
-            holder.txtTitle = (TextView)row.findViewById(R.id.txtTitle);
+            holder.imgIcon = (ImageView)row.findViewById(R.id.imgIconRuta);
+            holder.txtTitle = (TextView)row.findViewById(R.id.txtTitleRuta);
 
             row.setTag(holder);
         }else{

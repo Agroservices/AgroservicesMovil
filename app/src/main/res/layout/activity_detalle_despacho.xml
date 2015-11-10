@@ -24,7 +24,9 @@
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,9 +34,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Nombre Producto"
         android:id="@+id/textView6"
+        android:layout_below="@+id/codigo_despacho"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView3" />
+        android:layout_alignRight="@+id/nombre_producto"
+        android:layout_alignEnd="@+id/nombre_producto" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -42,9 +46,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Cantidad Producto"
         android:id="@+id/textView7"
-        android:layout_below="@+id/textView6"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/nombre_producto"
+        android:layout_alignRight="@+id/codigo_despacho"
+        android:layout_alignEnd="@+id/codigo_despacho"
+        android:layout_toRightOf="@+id/direccion_recogida"
+        android:layout_toEndOf="@+id/direccion_recogida" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,9 +58,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Dirección Entrega"
         android:id="@+id/textView8"
-        android:layout_below="@+id/textView9"
+        android:layout_below="@+id/direccion_entrega"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="63dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,7 +69,48 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Dirección Recogida"
         android:id="@+id/textView9"
+        android:layout_below="@+id/cantidad_producto"
+        android:layout_toRightOf="@+id/direccion_recogida"
+        android:layout_toEndOf="@+id/direccion_recogida" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/codigo_despacho"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/nombre_producto"
+        android:layout_alignLeft="@+id/textView7"
+        android:layout_alignStart="@+id/textView7"
+        android:layout_below="@+id/textView6"
+        android:layout_alignRight="@+id/codigo_despacho"
+        android:layout_alignEnd="@+id/codigo_despacho" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/cantidad_producto"
         android:layout_below="@+id/textView7"
+        android:layout_toRightOf="@+id/direccion_recogida"
+        android:layout_alignRight="@+id/textView7"
+        android:layout_alignEnd="@+id/textView7" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/direccion_recogida"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -70,54 +118,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/codigo_despacho"
-        android:layout_above="@+id/textView6"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView9"
-        android:layout_toEndOf="@+id/textView9" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/nombre_producto"
-        android:layout_below="@+id/codigo_despacho"
-        android:layout_alignRight="@+id/codigo_despacho"
-        android:layout_alignEnd="@+id/codigo_despacho"
-        android:layout_alignLeft="@+id/codigo_despacho"
-        android:layout_alignStart="@+id/codigo_despacho" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/cantidad_producto"
-        android:layout_above="@+id/textView9"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/nombre_producto"
-        android:layout_alignStart="@+id/nombre_producto" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/direccion_recogida"
-        android:layout_alignTop="@+id/textView9"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/cantidad_producto"
-        android:layout_alignStart="@+id/cantidad_producto" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/direccion_entrega"
-        android:layout_below="@+id/direccion_recogida"
-        android:layout_alignLeft="@+id/direccion_recogida"
-        android:layout_alignStart="@+id/direccion_recogida"
+        android:layout_below="@+id/textView9"
+        android:layout_toRightOf="@+id/direccion_recogida"
+        android:layout_alignRight="@+id/cantidad_producto"
+        android:layout_alignEnd="@+id/cantidad_producto" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Ciudad Recogida"
+        android:id="@+id/textView10"
+        android:layout_below="@+id/direccion_entrega"
+        android:layout_toRightOf="@+id/direccion_recogida"
+        android:layout_toEndOf="@+id/direccion_recogida" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/ciudad_recogida"
+        android:layout_below="@+id/textView10"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>
