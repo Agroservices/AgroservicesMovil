@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -46,15 +45,11 @@ public class ListarDespachos extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listar_despachos);
+        Log.i(ListarDespachos.class.toString(),"Creando Actividad para listar despachos");
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         int idRuta = bundle.getInt("CODIGO_RUTA");
         despachoData = new ArrayList<>();
-        ArrayList<Despacho> tempData = new ArrayList<Despacho>();
-        tempData.add(new Despacho(1,new DetalleFacturaId(1,1),100,1000,false));
-        tempData.add(new Despacho(2,new DetalleFacturaId(2,2),500,3000,false));
-        tempData.add(new Despacho(3,new DetalleFacturaId(1,3),20,50000,false));
-        despachoData = tempData;
         loadDespachos(idRuta);
         adapter = new DespachoAdapter(this,R.layout.listview_item_row,
                 despachoData);
@@ -67,7 +62,6 @@ public class ListarDespachos extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position -= listView1.getHeaderViewsCount();
                 int duration= Toast.LENGTH_LONG;
-                //Toast.makeText(view," ",duration).show();
                 Despacho despacho = (Despacho)adapter.getItem(position);
                 Intent i = new Intent(getApplicationContext(),DetalleDespacho.class);
                 System.out.println(despacho.getIdDespacho()+" "+despacho.getCantidadComprada());
@@ -90,6 +84,7 @@ public class ListarDespachos extends ActionBarActivity {
                 StringBuilder builder = new StringBuilder();
                 HttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/despachos/rutas/"+params[0]);
+                Log.i(ListarDespachos.class.toString(),"Hallar los despachos de la ruta");
                 try {
                     HttpResponse response = client.execute(httpGet);
                     StatusLine statusLine = response.getStatusLine();

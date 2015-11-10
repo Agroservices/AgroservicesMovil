@@ -48,11 +48,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         Log.i(MainActivity.class.toString(),"Creando la actividad principal");
         rutasData = new ArrayList<Ruta>();
-        rutasData.add(new Ruta(1,null,null));
-        rutasData.add(new Ruta(2,null,null));
-        rutasData.add(new Ruta(3,null,null));
-        rutasData.add(new Ruta(4,null,null));
-        rutasData.add(new Ruta(5,null,null));
         adapterRuta = new RutaAdapter(this, R.layout.listview_item_ruta_row,
                 rutasData);
         final ListView listViewRuta = (ListView)findViewById(R.id.listViewRuta);
@@ -65,7 +60,6 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position -= listViewRuta.getHeaderViewsCount();
                 int duration= Toast.LENGTH_LONG;
-                //Toast.makeText(view," ",duration).show();
                 Ruta ruta = (Ruta)adapterRuta.getItem(position);
                 Intent i = new Intent(getApplicationContext(),ListarDespachos.class);
                 System.out.println(ruta.getIdRutas()+" "+ruta.getFechaInicio());

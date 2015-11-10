@@ -31,12 +31,18 @@ public class DetalleDespacho extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_despacho);
+        Log.i(DetalleDespacho.class.toString(),"Crear la Actividad para ver detalle despachos");
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         int codigoDespacho = bundle.getInt("CODIGO_DESPACHO");
         double cantidadProducto = bundle.getDouble("CANTIDAD_PRODUCTO");
         int idProductoEnVenta = bundle.getInt("CODIGO_PRODUCTO");
         int idFactura = bundle.getInt("CODIGO_FACTURA");
+        TextView campoCantidad = (TextView)findViewById(R.id.cantidad_producto);
+        campoCantidad.setText(cantidadProducto+"");
+        TextView campoCodigo = (TextView)findViewById(R.id.codigo_despacho);
+        campoCodigo.setText(codigoDespacho+"");
+
         AsyncTask<String,Void,String> task1 = new AsyncTask<String, Void, String>() {
 
             @Override
@@ -44,6 +50,7 @@ public class DetalleDespacho extends ActionBarActivity {
                 StringBuilder builder = new StringBuilder();
                 HttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/productosEnVenta/"+params[0]+"/ubicacion");
+                Log.i(DetalleDespacho.class.toString(),"Hallar la ubicacion de recogida del producto");
                 try {
                     HttpResponse response = client.execute(httpGet);
                     StatusLine statusLine = response.getStatusLine();
@@ -73,25 +80,27 @@ public class DetalleDespacho extends ActionBarActivity {
                 JSONObject ubicacion = null;
                 try {
                     ubicacion = new JSONObject(s);
-                    String direccionEntrega = ubicacion.getString("direccion");
+                    String direccionRecogida = ubicacion.getString("direccion");
+                    String ciudadRecogida = ubicacion.getString("ciudad");
                     TextView text =(TextView)findViewById(R.id.direccion_recogida);
-                    text.setText(direccionEntrega);
+                    text.setText(direccionRecogida);
+                    text = (TextView)findViewById(R.id.ciudad_recogida);
+                    text.setText(ciudadRecogida);
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
             }
         };
-        TextView campoCantidad = (TextView)findViewById(R.id.cantidad_producto);
-        campoCantidad.setText(cantidadProducto+"");
-        TextView campoCodigo = (TextView)findViewById(R.id.codigo_despacho);
-        campoCodigo.setText(codigoDespacho+"");
+
         task1.execute(idProductoEnVenta+"");
+
         AsyncTask<String,Void,String>task2 = new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
                 StringBuilder builder = new StringBuilder();
                 HttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/ventas/factura/"+params[0]+"/ubicacion");
+                Log.i(DetalleDespacho.class.toString(),"Hallar la ubicacion de entrega del producto");
                 try {
                     HttpResponse response = client.execute(httpGet);
                     StatusLine statusLine = response.getStatusLine();
@@ -122,20 +131,26 @@ public class DetalleDespacho extends ActionBarActivity {
                 try {
                     ubicacion = new JSONObject(s);
                     String direccionEntrega = ubicacion.getString("direccion");
+                    String ciudadEntrega = ubicacion.getString("ciudad");
                     TextView text =(TextView)findViewById(R.id.direccion_entrega);
                     text.setText(direccionEntrega);
+                    text = (TextView)findViewById(R.id.ciudad_entrega);
+                    text.setText(ciudadEntrega);
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
             }
         };
+
         task2.execute(idFactura+"");
+
         AsyncTask<String,Void,String>task3 = new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
                 StringBuilder builder = new StringBuilder();
                 HttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/productosEnVenta/"+params[0]+"/nombre");
+                Log.i(DetalleDespacho.class.toString(),"Hallar el producto del despacho");
                 try {
                     HttpResponse response = client.execute(httpGet);
                     StatusLine statusLine = response.getStatusLine();
@@ -167,6 +182,7 @@ public class DetalleDespacho extends ActionBarActivity {
                 text.setText(s);
             }
         };
+
         task3.execute(idProductoEnVenta+"");
     }
 
