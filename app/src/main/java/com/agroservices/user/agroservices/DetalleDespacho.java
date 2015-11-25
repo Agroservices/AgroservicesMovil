@@ -1,31 +1,20 @@
 package com.agroservices.user.agroservices;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import model.Despacho;
 
 
 public class DetalleDespacho extends ActionBarActivity {
+
+    Despacho despacho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,156 +23,40 @@ public class DetalleDespacho extends ActionBarActivity {
         Log.i(DetalleDespacho.class.toString(),"Crear la Actividad para ver detalle despachos");
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
-        int codigoDespacho = bundle.getInt("CODIGO_DESPACHO");
-        double cantidadProducto = bundle.getDouble("CANTIDAD_PRODUCTO");
-        int idProductoEnVenta = bundle.getInt("CODIGO_PRODUCTO");
-        int idFactura = bundle.getInt("CODIGO_FACTURA");
-        TextView campoCantidad = (TextView)findViewById(R.id.cantidad_producto);
-        campoCantidad.setText(cantidadProducto+"");
+        despacho = (Despacho)i.getSerializableExtra("DESPACHO");
+        printDespacho(despacho);
+    }
+
+
+    private void printDespacho(Despacho despacho){
         TextView campoCodigo = (TextView)findViewById(R.id.codigo_despacho);
-        campoCodigo.setText(codigoDespacho+"");
+        campoCodigo.setText(despacho.getIdDespacho()+"");
+        TextView campoNombre = (TextView)findViewById(R.id.nombre_producto);
+        campoNombre.setText(despacho.getNombreProducto());
+        TextView campoCantidad = (TextView)findViewById(R.id.cantidad_producto);
+        campoCantidad.setText(despacho.getCantidadComprada()+"");
+        TextView campoDireccionRecogida = (TextView)findViewById(R.id.direccion_recogida);
+        campoDireccionRecogida.setText(despacho.getDireccionRecogida());
+        TextView campoCiudadRecogida = (TextView)findViewById(R.id.ciudad_recogida);
+        campoCiudadRecogida.setText(despacho.getCiudadRecogida());
+        TextView campoDireccionEntrega = (TextView)findViewById(R.id.direccion_entrega);
+        campoDireccionEntrega.setText(despacho.getDireccionEntrega());
+        TextView campoCiudadEntrega = (TextView)findViewById(R.id.ciudad_entrega);
+        campoCiudadEntrega.setText(despacho.getCiudadEntrega());
+    }
 
-        AsyncTask<String,Void,String> task1 = new AsyncTask<String, Void, String>() {
+    public void llegarCampesino(View view){
+        Intent i = new Intent(getApplicationContext(),Mapa.class);
+        i.putExtra("DESTINO",despacho.getCoordenadasRecogida());
+        i.putExtra("ES_CAMPESINO",true);
+        startActivity(i);
+    }
 
-            @Override
-            protected String doInBackground(String... params) {
-                StringBuilder builder = new StringBuilder();
-                HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/productosEnVenta/"+params[0]+"/ubicacion");
-                Log.i(DetalleDespacho.class.toString(),"Hallar la ubicacion de recogida del producto");
-                try {
-                    HttpResponse response = client.execute(httpGet);
-                    StatusLine statusLine = response.getStatusLine();
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader =
-                            new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.class.toString(),
-                            "GET request failed" + e.getLocalizedMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.class.toString(),
-                            "GET request failed"+e.getLocalizedMessage());
-                }
-                return builder.toString();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                JSONObject ubicacion = null;
-                try {
-                    ubicacion = new JSONObject(s);
-                    String direccionRecogida = ubicacion.getString("direccion");
-                    String ciudadRecogida = ubicacion.getString("ciudad");
-                    TextView text =(TextView)findViewById(R.id.direccion_recogida);
-                    text.setText(direccionRecogida);
-                    text = (TextView)findViewById(R.id.ciudad_recogida);
-                    text.setText(ciudadRecogida);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        task1.execute(idProductoEnVenta+"");
-
-        AsyncTask<String,Void,String>task2 = new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... params) {
-                StringBuilder builder = new StringBuilder();
-                HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/ventas/factura/"+params[0]+"/ubicacion");
-                Log.i(DetalleDespacho.class.toString(),"Hallar la ubicacion de entrega del producto");
-                try {
-                    HttpResponse response = client.execute(httpGet);
-                    StatusLine statusLine = response.getStatusLine();
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader =
-                            new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.class.toString(),
-                            "GET request failed" + e.getLocalizedMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.class.toString(),
-                            "GET request failed"+e.getLocalizedMessage());
-                }
-                return builder.toString();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                JSONObject ubicacion = null;
-                try {
-                    ubicacion = new JSONObject(s);
-                    String direccionEntrega = ubicacion.getString("direccion");
-                    String ciudadEntrega = ubicacion.getString("ciudad");
-                    TextView text =(TextView)findViewById(R.id.direccion_entrega);
-                    text.setText(direccionEntrega);
-                    text = (TextView)findViewById(R.id.ciudad_entrega);
-                    text.setText(ciudadEntrega);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        task2.execute(idFactura+"");
-
-        AsyncTask<String,Void,String>task3 = new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... params) {
-                StringBuilder builder = new StringBuilder();
-                HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet("https://agroservices.herokuapp.com/rest/productosEnVenta/"+params[0]+"/nombre");
-                Log.i(DetalleDespacho.class.toString(),"Hallar el producto del despacho");
-                try {
-                    HttpResponse response = client.execute(httpGet);
-                    StatusLine statusLine = response.getStatusLine();
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader =
-                            new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.class.toString(),
-                            "GET request failed" + e.getLocalizedMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.class.toString(),
-                            "GET request failed"+e.getLocalizedMessage());
-                }
-                return builder.toString();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                String nombre = s;
-                TextView text =(TextView)findViewById(R.id.nombre_producto);
-                text.setText(s);
-            }
-        };
-
-        task3.execute(idProductoEnVenta+"");
+    public void llegarMinorista(View view){
+        Intent i = new Intent(getApplicationContext(),Mapa.class);
+        i.putExtra("DESTINO",despacho.getCoordenadasEntrega());
+        i.putExtra("ES_CAMPESINO",false);
+        startActivity(i);
     }
 
 

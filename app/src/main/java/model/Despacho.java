@@ -1,22 +1,26 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Created by User on 09/11/2015.
  */
-public class Despacho {
+public class Despacho implements Serializable {
 
     int idDespacho;
-    DetalleFacturaId detalleFacturaId;
+    String nombreProducto;
     double cantidadComprada;
-    double precioVenta;
+    Ubicacion coordenadasEntrega;
+    String direccionEntrega;
+    String ciudadEntrega;
+    Ubicacion coordenadasRecogida;
+    String direccionRecogida;
+    String ciudadRecogida;
     boolean yaSeEntrego;
+    boolean yaSeRecogio;
 
-    public Despacho(int idDespacho, DetalleFacturaId detalleFacturaId, double cantidadComprada, double precioVenta, boolean yaSeEntrego) {
-        this.idDespacho = idDespacho;
-        this.detalleFacturaId = detalleFacturaId;
-        this.cantidadComprada = cantidadComprada;
-        this.precioVenta = precioVenta;
-        this.yaSeEntrego = yaSeEntrego;
+    public Despacho(){
+
     }
 
     public int getIdDespacho() {
@@ -27,12 +31,12 @@ public class Despacho {
         this.idDespacho = idDespacho;
     }
 
-    public DetalleFacturaId getDetalleFacturaId() {
-        return detalleFacturaId;
+    public String getNombreProducto() {
+        return nombreProducto;
     }
 
-    public void setDetalleFacturaId(DetalleFacturaId detalleFacturaId) {
-        this.detalleFacturaId = detalleFacturaId;
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
     public double getCantidadComprada() {
@@ -43,12 +47,52 @@ public class Despacho {
         this.cantidadComprada = cantidadComprada;
     }
 
-    public double getPrecioVenta() {
-        return precioVenta;
+    public Ubicacion getCoordenadasEntrega() {
+        return coordenadasEntrega;
     }
 
-    public void setPrecioVenta(double precioVenta) {
-        this.precioVenta = precioVenta;
+    public void setCoordenadasEntrega(Ubicacion coordenadasEntrega) {
+        this.coordenadasEntrega = coordenadasEntrega;
+    }
+
+    public String getDireccionEntrega() {
+        return direccionEntrega;
+    }
+
+    public void setDireccionEntrega(String direccionEntrega) {
+        this.direccionEntrega = direccionEntrega;
+    }
+
+    public String getCiudadEntrega() {
+        return ciudadEntrega;
+    }
+
+    public void setCiudadEntrega(String ciudadEntrega) {
+        this.ciudadEntrega = ciudadEntrega;
+    }
+
+    public Ubicacion getCoordenadasRecogida() {
+        return coordenadasRecogida;
+    }
+
+    public void setCoordenadasRecogida(Ubicacion coordenadasRecogida) {
+        this.coordenadasRecogida = coordenadasRecogida;
+    }
+
+    public String getDireccionRecogida() {
+        return direccionRecogida;
+    }
+
+    public void setDireccionRecogida(String direccionRecogida) {
+        this.direccionRecogida = direccionRecogida;
+    }
+
+    public String getCiudadRecogida() {
+        return ciudadRecogida;
+    }
+
+    public void setCiudadRecogida(String ciudadRecogida) {
+        this.ciudadRecogida = ciudadRecogida;
     }
 
     public boolean isYaSeEntrego() {
@@ -57,5 +101,30 @@ public class Despacho {
 
     public void setYaSeEntrego(boolean yaSeEntrego) {
         this.yaSeEntrego = yaSeEntrego;
+    }
+
+    public boolean isYaSeRecogio() {
+        return yaSeRecogio;
+    }
+
+    public void setYaSeRecogio(boolean yaSeRecogio) {
+        this.yaSeRecogio = yaSeRecogio;
+    }
+
+    @Override
+    public String toString() {
+        return "Despacho{" +
+                "idDespacho=" + idDespacho +
+                ", nombreProducto='" + nombreProducto + '\'' +
+                ", cantidadComprada=" + cantidadComprada +
+                ", direccionEntrega='" + direccionEntrega + '\'' +
+                ", ciudadEntrega='" + ciudadEntrega + '\'' +
+                ", direccionRecogida='" + direccionRecogida + '\'' +
+                ", ciudadRecogida='" + ciudadRecogida + '\'' +
+                ", coordenadasRecogida=" + coordenadasRecogida +
+                ", coordenadasEntrega=" + coordenadasEntrega +
+                ", yaSeEntrego=" + yaSeEntrego +
+                ", yaSeRecogio=" + yaSeRecogio +
+                '}';
     }
 }

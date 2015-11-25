@@ -31,7 +31,7 @@
         android:id="@+id/id_transportista"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Id Transportista" />
+        android:text="123456789" />
 
 
 </RelativeLayout>

@@ -10,11 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 
 import model.Despacho;
 import model.DespachoAdapter;
-import model.DetalleFacturaId;
+import model.Ubicacion;
 
 
 public class ListarDespachos extends ActionBarActivity {
@@ -61,14 +59,12 @@ public class ListarDespachos extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position -= listView1.getHeaderViewsCount();
-                int duration= Toast.LENGTH_LONG;
                 Despacho despacho = (Despacho)adapter.getItem(position);
                 Intent i = new Intent(getApplicationContext(),DetalleDespacho.class);
                 System.out.println(despacho.getIdDespacho()+" "+despacho.getCantidadComprada());
-                i.putExtra("CODIGO_DESPACHO",despacho.getIdDespacho());
-                i.putExtra("CANTIDAD_PRODUCTO",despacho.getCantidadComprada());
-                i.putExtra("CODIGO_PRODUCTO",despacho.getDetalleFacturaId().getProductosEnVentaId());
-                i.putExtra("CODIGO_FACTURA",despacho.getDetalleFacturaId().getFacturasId());
+                ArrayList<Despacho> despachoSend = new ArrayList<Despacho>();
+                i.putExtra("DESPACHO", despacho);
+                i.putExtra("a",despacho.getCoordenadasRecogida());
                 startActivity(i);
             }
         });
@@ -87,7 +83,6 @@ public class ListarDespachos extends ActionBarActivity {
                 Log.i(ListarDespachos.class.toString(),"Hallar los despachos de la ruta");
                 try {
                     HttpResponse response = client.execute(httpGet);
-                    StatusLine statusLine = response.getStatusLine();
                     HttpEntity entity = response.getEntity();
                     InputStream content = entity.getContent();
                     BufferedReader reader =
@@ -118,14 +113,29 @@ public class ListarDespachos extends ActionBarActivity {
                     for(int i=0;i<arrayDespachos.length();i++){
                         Log.i(MainActivity.class.toString(),"Objetos JSON"+arrayDespachos.get(i).toString());
                         JSONObject tempDespacho = arrayDespachos.getJSONObject(i);
-                        JSONObject detalleFactura = tempDespacho.getJSONObject("detalleFactura");
-                        JSONObject detalleFacturaKey = detalleFactura.getJSONObject("id");
-                        DetalleFacturaId detalleFacturaId = new DetalleFacturaId(detalleFacturaKey.getInt("productosEnVentaIdProductosEnVenta"),
-                                detalleFacturaKey.getInt("facturasIdFacturas"));
-                        System.out.println(detalleFactura.toString());
                         System.out.println(tempDespacho);
-                        tempData.add(new Despacho(tempDespacho.getInt("idDespachos"),detalleFacturaId,detalleFactura.getDouble("cantidadComprada"),
-                                detalleFactura.getDouble("precioVenta"),detalleFactura.getBoolean("yaSeEntrego")));
+                        JSONObject detalleFactura = tempDespacho.getJSONObject("detalleFactura");
+                        JSONObject ubicacionMinorista = detalleFactura.getJSONObject("facturas").getJSONObject("ubicaciones");
+                        JSONObject ubicacionCampesino = detalleFactura.getJSONObject("productosEnVenta").getJSONObject("campesinos")
+                                .getJSONObject("ubicaciones");
+                        JSONObject producto = detalleFactura.getJSONObject("productosEnVenta").getJSONObject("productos");
+                        System.out.println(detalleFactura);
+                        Despacho d = new Despacho();
+                        d.setIdDespacho(tempDespacho.getInt("idDespachos"));
+                        d.setCantidadComprada(detalleFactura.getDouble("cantidadComprada"));
+                        d.setCiudadEntrega(ubicacionMinorista.getString("ciudad"));
+                        d.setDireccionEntrega(ubicacionMinorista.getString("direccion"));
+                        d.setCiudadRecogida(ubicacionCampesino.getString("ciudad"));
+                        d.setDireccionRecogida(ubicacionCampesino.getString("direccion"));
+                        d.setNombreProducto(producto.getString("nombre"));
+                        d.setYaSeEntrego(detalleFactura.getBoolean("yaSeEntrego"));
+                        //Construir las coordenadas en latitud y longitud
+                        d.setCoordenadasRecogida(new Ubicacion(Double.parseDouble(ubicacionCampesino.getString("latitud")),
+                                Double.parseDouble(ubicacionCampesino.getString("longitud"))));
+                        d.setCoordenadasEntrega(new Ubicacion(Double.parseDouble(ubicacionMinorista.getString("latitud")),
+                                Double.parseDouble(ubicacionMinorista.getString("longitud"))));
+                        tempData.add(d);
+                        System.out.println(d);
                     }
                     Log.v(MainActivity.class.toString(), "GET DATA " + s);
                     despachoData = tempData;

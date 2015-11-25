@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -59,7 +58,6 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position -= listViewRuta.getHeaderViewsCount();
-                int duration= Toast.LENGTH_LONG;
                 Ruta ruta = (Ruta)adapterRuta.getItem(position);
                 Intent i = new Intent(getApplicationContext(),ListarDespachos.class);
                 System.out.println(ruta.getIdRutas()+" "+ruta.getFechaInicio());
