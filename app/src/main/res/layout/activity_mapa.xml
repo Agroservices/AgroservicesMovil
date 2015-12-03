@@ -4,12 +4,23 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.agroservices.user.agroservices.Mapa">
+    android:orientation="vertical"
+    tools:context="com.agroservices.user.agroservices.Mapa"
+    android:weightSum="1">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.MapFragment"/>
+        android:layout_height="424dp"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_weight="0.83" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/postEnvio"
+        android:layout_gravity="center_horizontal"
+        android:onClick="postViaje" />
 
 </LinearLayout>

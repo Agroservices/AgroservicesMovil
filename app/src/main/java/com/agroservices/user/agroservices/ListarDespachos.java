@@ -128,7 +128,8 @@ public class ListarDespachos extends ActionBarActivity {
                         d.setCiudadRecogida(ubicacionCampesino.getString("ciudad"));
                         d.setDireccionRecogida(ubicacionCampesino.getString("direccion"));
                         d.setNombreProducto(producto.getString("nombre"));
-                        d.setYaSeEntrego(detalleFactura.getBoolean("yaSeEntrego"));
+                        d.setYaSeEntrego(tempDespacho.getBoolean("seEntrego"));
+                        d.setYaSeRecogio(tempDespacho.getBoolean("seRecogio"));
                         //Construir las coordenadas en latitud y longitud
                         d.setCoordenadasRecogida(new Ubicacion(Double.parseDouble(ubicacionCampesino.getString("latitud")),
                                 Double.parseDouble(ubicacionCampesino.getString("longitud"))));

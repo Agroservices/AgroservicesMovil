@@ -10,6 +10,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,7 +31,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -50,6 +58,11 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
     LatLng origen = new LatLng(4.3364751,-74.3697546);
     Ubicacion destino;
     Location mLastLocation;
+    LatLng destinoLatLng;
+    boolean esCampesino;
+    String direccion;
+    boolean viaje;
+    int idDespacho;
     private static final String TAG = Mapa.class.toString();
 
     @Override
@@ -59,11 +72,83 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         destino = (Ubicacion)bundle.get("DESTINO");
+        esCampesino = bundle.getBoolean("ES_CAMPESINO");
+        direccion = bundle.getString("DIRECCION");
+        viaje = bundle.getBoolean("VIAJE");
+        idDespacho = bundle.getInt("ID_DESPACHO");
         MapFragment fragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         map = fragment.getMap();
         buildGoogleApiClient();
+        Button button = (Button)findViewById(R.id.postEnvio);
+        if(esCampesino){
+            button.setText("Recoger Producto");
+        }else{
+            button.setText("Entregar Producto");
+        }
+        if(viaje)
+            button.setEnabled(false);
     }
 
+
+    public void postViaje(View view){
+        AsyncTask<Void,Void,String>task = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void ... params) {
+                JSONObject despacho = new JSONObject();
+                String reqResponse = null;
+                String url = "";
+                try{
+                    despacho.put("idDespachos",0);
+                    despacho.put("detalleFactura",null);
+                    despacho.put("rutas",null);
+                    despacho.put("estimacionRecoleccion",null);
+                    despacho.put("estimacionEntrega",null);
+                    if(esCampesino){
+                        despacho.put("seRecogio",true);
+                        despacho.put("seEntrego",false);
+                        url = "https://agroservices.herokuapp.com/rest/despachos/"+idDespacho+"/seRecogio";
+                    }else{
+                        despacho.put("seRecogio",false);
+                        despacho.put("seEntrego",true);
+                        url = "https://agroservices.herokuapp.com/rest/despachos/"+idDespacho+"/seEntrego";
+                    }
+                    DefaultHttpClient dhhtpc=new DefaultHttpClient();
+                    HttpPost postreq=new HttpPost(url);
+                    //agregar la versión textual del documento jSON a la petición
+                    StringEntity se=new StringEntity(despacho.toString());
+                    se.setContentType("application/json;charset=UTF-8");
+                    se.setContentEncoding(new
+                            BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+                    postreq.setEntity(se);
+                    //ejecutar la petición
+                    HttpResponse httpr=dhhtpc.execute(postreq);
+                    //Para obtener la respuesta:
+                    reqResponse= EntityUtils.toString(httpr.getEntity());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e(Mapa.class.toString(),"Error en la peticion post");
+                }
+                return reqResponse;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Toast toast = null;
+                if(s!=null) {
+                    Log.i(Mapa.class.toString(), "Post Exitoso");
+                    toast = Toast.makeText(getApplicationContext(),"Se ha actualizado exitosamente la informacion",
+                            Toast.LENGTH_LONG);
+                }else{
+                    Log.i(Mapa.class.toString(),"Error en el POST");
+                    toast = Toast.makeText(getApplicationContext(),"No se ha podido actualizar la información",
+                            Toast.LENGTH_LONG);
+                }
+                toast.show();
+            }
+        };
+        task.execute();
+    }
 
     private String getUrl(LatLng origen, LatLng destino){
         Uri.Builder builder = new Uri.Builder();
@@ -157,8 +242,8 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
                 }
             };
             origen = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-            LatLng destinoMapa = new LatLng(destino.getLatitude(),destino.getLongitude());
-            task.execute(origen, destinoMapa);
+            destinoLatLng = new LatLng(destino.getLatitude(),destino.getLongitude());
+            task.execute(origen, destinoLatLng);
             CameraPosition camera = new CameraPosition.Builder()
                     .zoom(13)
                     .target(origen)
@@ -245,6 +330,18 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
             }
             // Drawing polyline in the Google Map for the i-th route
             map.addPolyline(lineOptions);
+            MarkerOptions home = new MarkerOptions()
+                    .position(new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()))
+                    .title("Tu posicion");
+            String title ="Direccion Entrega: ";
+            if(esCampesino)
+                title = "Destino Recogida: ";
+            title+=direccion;
+            MarkerOptions goal = new MarkerOptions()
+                    .position(destinoLatLng)
+                    .title(title);
+            map.addMarker(home);
+            map.addMarker(goal);
         }
     }
 

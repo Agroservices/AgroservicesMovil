@@ -49,6 +49,9 @@ public class DetalleDespacho extends ActionBarActivity {
         Intent i = new Intent(getApplicationContext(),Mapa.class);
         i.putExtra("DESTINO",despacho.getCoordenadasRecogida());
         i.putExtra("ES_CAMPESINO",true);
+        i.putExtra("DIRECCION",despacho.getDireccionRecogida());
+        i.putExtra("VIAJE",despacho.isYaSeRecogio());
+        i.putExtra("ID_DESPACHO",despacho.getIdDespacho());
         startActivity(i);
     }
 
@@ -56,6 +59,9 @@ public class DetalleDespacho extends ActionBarActivity {
         Intent i = new Intent(getApplicationContext(),Mapa.class);
         i.putExtra("DESTINO",despacho.getCoordenadasEntrega());
         i.putExtra("ES_CAMPESINO",false);
+        i.putExtra("CIUDAD",despacho.getCiudadEntrega());
+        i.putExtra("VIAJE",despacho.isYaSeEntrego());
+        i.putExtra("ID_DESPACHO",despacho.getIdDespacho());
         startActivity(i);
     }
 
