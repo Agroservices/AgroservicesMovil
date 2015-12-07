@@ -61,7 +61,8 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
     LatLng destinoLatLng;
     boolean esCampesino;
     String direccion;
-    boolean viaje;
+    boolean seRecogio;
+    boolean seEntrego;
     int idDespacho;
     private static final String TAG = Mapa.class.toString();
 
@@ -74,7 +75,8 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
         destino = (Ubicacion)bundle.get("DESTINO");
         esCampesino = bundle.getBoolean("ES_CAMPESINO");
         direccion = bundle.getString("DIRECCION");
-        viaje = bundle.getBoolean("VIAJE");
+        seRecogio = bundle.getBoolean("RECOGIO");
+        seEntrego = bundle.getBoolean("ENTREGO");
         idDespacho = bundle.getInt("ID_DESPACHO");
         MapFragment fragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         map = fragment.getMap();
@@ -82,11 +84,16 @@ public class Mapa extends ActionBarActivity implements GoogleApiClient.Connectio
         Button button = (Button)findViewById(R.id.postEnvio);
         if(esCampesino){
             button.setText("Recoger Producto");
+            if(seRecogio)
+                button.setEnabled(false);
         }else{
             button.setText("Entregar Producto");
+            if(seRecogio && !seEntrego){
+                button.setEnabled(true);
+            }else{
+                button.setEnabled(false);
+            }
         }
-        if(viaje)
-            button.setEnabled(false);
     }
 
 

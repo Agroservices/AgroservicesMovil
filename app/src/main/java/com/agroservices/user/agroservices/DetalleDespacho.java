@@ -50,7 +50,8 @@ public class DetalleDespacho extends ActionBarActivity {
         i.putExtra("DESTINO",despacho.getCoordenadasRecogida());
         i.putExtra("ES_CAMPESINO",true);
         i.putExtra("DIRECCION",despacho.getDireccionRecogida());
-        i.putExtra("VIAJE",despacho.isYaSeRecogio());
+        i.putExtra("RECOGIO",despacho.isYaSeRecogio());
+        i.putExtra("ENTREGO",despacho.isYaSeEntrego());
         i.putExtra("ID_DESPACHO",despacho.getIdDespacho());
         startActivity(i);
     }
@@ -60,7 +61,8 @@ public class DetalleDespacho extends ActionBarActivity {
         i.putExtra("DESTINO",despacho.getCoordenadasEntrega());
         i.putExtra("ES_CAMPESINO",false);
         i.putExtra("CIUDAD",despacho.getCiudadEntrega());
-        i.putExtra("VIAJE",despacho.isYaSeEntrego());
+        i.putExtra("RECOGIO",despacho.isYaSeRecogio());
+        i.putExtra("ENTREGO",despacho.isYaSeEntrego());
         i.putExtra("ID_DESPACHO",despacho.getIdDespacho());
         startActivity(i);
     }
